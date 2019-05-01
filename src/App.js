@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import styled, { createGlobalStyle } from "styled-components";
-import Piece from "./components/Piece";
+import React from "react";
+import { createGlobalStyle } from "styled-components";
+
 import Game from "./components/Game";
 
 function App() {
@@ -17,7 +17,8 @@ function App() {
     align-items: center;
     justify-content: center;
     height:100vh;
-    width:100%
+    width:100%;
+    min-width:800px;
   }
   `;
 

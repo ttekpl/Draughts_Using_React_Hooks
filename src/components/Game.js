@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled from "styled-components";
 import Piece from "./Piece";
 
 function Game() {
@@ -74,9 +74,113 @@ function Game() {
     setValues(newValues);
   }, []);
 
+  const [isAnyPieceClicked, setIsAnyPieceClicked] = useState(false);
+
+  const checkMoveOptions = newValues => {
+    newValues.map((val, i) =>
+      val.map((v, index) => {
+        //   For White Next Turn Only
+        if (isBlackNext && !v.black && v.isCovered) {
+          console.log(isBlackNext);
+          if (index === 0) {
+            if (!newValues[i + 1][index + 1].isCovered)
+              newValues[i + 1][index + 1].canMoveHere = true;
+            else {
+              if (
+                !newValues[i + 2][index + 2].isCovered &&
+                newValues[i + 1][index + 1].black
+              )
+                newValues[i + 2][index + 2].canBeatHere = true;
+            }
+          } else if (index === 7) {
+            if (!newValues[i + 1][index - 1].isCovered)
+              newValues[i + 1][index - 1].canMoveHere = true;
+            else {
+              if (
+                !newValues[i + 2][index - 2].isCovered &&
+                newValues[i + 1][index - 1].black
+              )
+                newValues[i + 2][index - 2].canBeatHere = true;
+            }
+          } else {
+            if (!newValues[i + 1][index - 1].isCovered)
+              newValues[i + 1][index - 1].canMoveHere = true;
+            else {
+              if (
+                index - 1 !== 0 &&
+                index - 1 !== 7 &&
+                !newValues[i + 2][index - 2].isCovered &&
+                newValues[i + 1][index - 1].black
+              )
+                newValues[i + 2][index - 2].canBeatHere = true;
+            }
+            if (!newValues[i + 1][index + 1].isCovered)
+              newValues[i + 1][index + 1].canMoveHere = true;
+            else {
+              if (
+                index + 1 !== 0 &&
+                index + 1 !== 7 &&
+                !newValues[i + 2][index + 2].isCovered &&
+                newValues[i + 1][index + 1].black
+              )
+                newValues[i + 2][index + 2].canBeatHere = true;
+            }
+          }
+        } else if (!isBlackNext && v.black && v.isCovered) {
+          console.log(isBlackNext);
+          if (index === 0) {
+            if (!newValues[i - 1][index + 1].isCovered)
+              newValues[i - 1][index + 1].canMoveHere = true;
+            else {
+              if (
+                !newValues[i - 2][index + 2].isCovered &&
+                !newValues[i - 1][index + 1].black
+              )
+                newValues[i - 2][index + 2].canBeatHere = true;
+            }
+          } else if (index === 7) {
+            if (!newValues[i - 1][index - 1].isCovered)
+              newValues[i - 1][index - 1].canMoveHere = true;
+            else {
+              if (
+                !newValues[i - 2][index - 2].isCovered &&
+                !newValues[i - 1][index - 1].black
+              )
+                newValues[i - 2][index - 2].canBeatHere = true;
+            }
+          } else {
+            if (!newValues[i - 1][index - 1].isCovered)
+              newValues[i - 1][index - 1].canMoveHere = true;
+            else {
+              if (
+                index - 1 !== 0 &&
+                index - 1 !== 7 &&
+                !newValues[i - 2][index - 2].isCovered &&
+                !newValues[i - 1][index - 1].black
+              )
+                newValues[i - 2][index - 2].canBeatHere = true;
+            }
+            if (!newValues[i - 1][index + 1].isCovered)
+              newValues[i - 1][index + 1].canMoveHere = true;
+            else {
+              if (
+                index + 1 !== 0 &&
+                index + 1 !== 7 &&
+                !newValues[i - 2][index + 2].isCovered &&
+                !newValues[i - 1][index + 1].black
+              )
+                newValues[i - 2][index + 2].canBeatHere = true;
+            }
+          }
+        }
+      })
+    );
+  };
+
   const onPieceClick = (i, index, black, isBlackNext) => {
     if (black && isBlackNext) {
       if (!values[i][index].isPieceClicked) {
+        setIsAnyPieceClicked(true);
         const newValues = values.map((val, i) =>
           val.map((v, index) => {
             return {
@@ -84,7 +188,7 @@ function Game() {
               black: v.black,
               isPieceClicked: false,
               canMoveHere: false,
-              canBeatHere: false
+              canBeatHere: v.canBeatHere
             };
           })
         );
@@ -97,7 +201,7 @@ function Game() {
           else {
             if (
               !newValues[i - 2][index + 2].isCovered &&
-              !newValues[i - 1][index - 1].black
+              !newValues[i - 1][index + 1].black
             )
               newValues[i - 2][index + 2].canBeatHere = true;
           }
@@ -139,13 +243,15 @@ function Game() {
         setValues(newValues);
       }
     } else if (!black && !isBlackNext) {
+      setIsAnyPieceClicked(true);
       const newValues = values.map((val, i) =>
         val.map((v, index) => {
           return {
             isCovered: v.isCovered,
             black: v.black,
             isPieceClicked: false,
-            canMoveHere: false
+            canMoveHere: false,
+            canBeatHere: v.canBeatHere
           };
         })
       );
@@ -200,29 +306,78 @@ function Game() {
 
   const onFieldClick = (i, index, isBlackNext) => {
     let color;
-
+    let canMove = true;
     const newValues = values.map((val, i) =>
       val.map((v, index) => {
+        if (v.canBeatHere) {
+          canMove = false;
+        }
+
         if (v.isPieceClicked) {
           color = v.black;
           return {
             isCovered: false,
             black: false,
             isPieceClicked: false,
-            canMoveHere: false
+            canMoveHere: false,
+            canBeatHere: false
           };
         } else {
           return {
             isCovered: v.isCovered,
             black: v.black,
             isPieceClicked: false,
-            canMoveHere: false
+            canMoveHere: false,
+            canBeatHere: false
+          };
+        }
+      })
+    );
+
+    if (!canMove) return alert("You must beat");
+    newValues[i][index].isCovered = true;
+    newValues[i][index].black = color;
+
+    checkMoveOptions(newValues);
+    setIsAnyPieceClicked(false);
+    setValues(newValues);
+    setIsBlackNext(!isBlackNext);
+  };
+
+  const onBeatFieldClick = (i, index, isBlackNext) => {
+    let color;
+    let triggerI;
+    let triggerIndex;
+
+    const newValues = values.map((val, i) =>
+      val.map((v, index) => {
+        if (v.isPieceClicked) {
+          color = v.black;
+          triggerI = i;
+          triggerIndex = index;
+          return {
+            isCovered: false,
+            black: false,
+            isPieceClicked: false,
+            canMoveHere: false,
+            canBeatHere: false
+          };
+        } else {
+          return {
+            isCovered: v.isCovered,
+            black: v.black,
+            isPieceClicked: false,
+            canMoveHere: false,
+            canBeatHere: false
           };
         }
       })
     );
     newValues[i][index].isCovered = true;
     newValues[i][index].black = color;
+    newValues[(i + triggerI) / 2][(index + triggerIndex) / 2].isCovered = false;
+    checkMoveOptions(newValues);
+    setIsAnyPieceClicked(false);
     setValues(newValues);
     setIsBlackNext(!isBlackNext);
   };
@@ -237,6 +392,8 @@ function Game() {
     align-items: center;
     justify-content: center;
     background-color: burlywood;
+    border: 10px solid saddlebrown;
+    box-shadow: 0 0 10px -6px #333;
   `;
 
   const Field = styled.div`
@@ -261,43 +418,68 @@ function Game() {
         z-index: 1;
       } */
     `;
+
+  const Informator = styled.h1`
+    text-transform: uppercase;
+    position: fixed;
+    left: 10px;
+    width: 20vw;
+    top: 20%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+    font-family: sans-serif;
+  `;
   //  onPieceClick = (i, index, black, isBlackNext)
   return (
-    <Board>
-      {values.map((val, i) =>
-        val.map((v, index) => {
-          console.log(i);
-          return (
-            <Field
-              key={`${i}${index}`}
-              brown={
-                ((i + 1) % 2 === 0 ? index + 2 : index + 1) % 2 === 0
-                  ? true
-                  : false
-              }
-              isClicked={v.isPieceClicked || v.canMoveHere}
-              isBeatField={v.canBeatHere}
-              onClick={
-                v.canMoveHere
-                  ? () => {
-                      onFieldClick(i, index, isBlackNext);
-                    }
-                  : null
-              }
-            >
-              {v.isCovered ? (
-                <Piece
-                  key={`${i}${index}`}
-                  black={v.black}
-                  isBlackNext={isBlackNext}
-                  onClick={() => onPieceClick(i, index, v.black, isBlackNext)}
-                />
-              ) : null}
-            </Field>
-          );
-        })
-      )}
-    </Board>
+    <>
+      <Board>
+        {values.map((val, i) =>
+          val.map((v, index) => {
+            let moveFn;
+            if (v.canBeatHere) {
+              moveFn = () => {
+                onBeatFieldClick(i, index, isBlackNext);
+              };
+            } else if (v.canMoveHere) {
+              moveFn = () => {
+                onFieldClick(i, index, isBlackNext);
+              };
+            } else {
+              moveFn = null;
+            }
+            return (
+              <Field
+                key={`${i}${index}`}
+                brown={
+                  ((i + 1) % 2 === 0 ? index + 2 : index + 1) % 2 === 0
+                    ? true
+                    : false
+                }
+                isClicked={
+                  (v.isPieceClicked || v.canMoveHere) && isAnyPieceClicked
+                }
+                isBeatField={v.canBeatHere}
+                onClick={isAnyPieceClicked ? moveFn : null}
+              >
+                {v.isCovered ? (
+                  <Piece
+                    key={`${i}${index}`}
+                    black={v.black}
+                    isBlackNext={isBlackNext}
+                    onClick={() => onPieceClick(i, index, v.black, isBlackNext)}
+                  />
+                ) : null}
+              </Field>
+            );
+          })
+        )}
+      </Board>
+      <Informator>
+        It is {isBlackNext ? "Black" : " white"}'s player turn
+      </Informator>
+    </>
   );
 }
 
