@@ -82,95 +82,129 @@ function Game() {
         //   For White Next Turn Only
         if (isBlackNext && !v.black && v.isCovered) {
           console.log(isBlackNext);
-          if (index === 0) {
-            if (!newValues[i + 1][index + 1].isCovered)
-              newValues[i + 1][index + 1].canMoveHere = true;
-            else {
-              if (
-                !newValues[i + 2][index + 2].isCovered &&
-                newValues[i + 1][index + 1].black
-              )
-                newValues[i + 2][index + 2].canBeatHere = true;
+          if (i < 6) {
+            if (index === 0) {
+              if (!newValues[i + 1][index + 1].isCovered)
+                newValues[i + 1][index + 1].canMoveHere = true;
+              else {
+                if (
+                  !newValues[i + 2][index + 2].isCovered &&
+                  newValues[i + 1][index + 1].black
+                )
+                  newValues[i + 2][index + 2].canBeatHere = true;
+              }
+            } else if (index === 7) {
+              if (!newValues[i + 1][index - 1].isCovered)
+                newValues[i + 1][index - 1].canMoveHere = true;
+              else {
+                if (
+                  !newValues[i + 2][index - 2].isCovered &&
+                  newValues[i + 1][index - 1].black
+                )
+                  newValues[i + 2][index - 2].canBeatHere = true;
+              }
+            } else {
+              if (!newValues[i + 1][index - 1].isCovered)
+                newValues[i + 1][index - 1].canMoveHere = true;
+              else {
+                if (
+                  index - 1 !== 0 &&
+                  index - 1 !== 7 &&
+                  !newValues[i + 2][index - 2].isCovered &&
+                  newValues[i + 1][index - 1].black
+                )
+                  newValues[i + 2][index - 2].canBeatHere = true;
+              }
+              if (!newValues[i + 1][index + 1].isCovered)
+                newValues[i + 1][index + 1].canMoveHere = true;
+              else {
+                if (
+                  index + 1 !== 0 &&
+                  index + 1 !== 7 &&
+                  !newValues[i + 2][index + 2].isCovered &&
+                  newValues[i + 1][index + 1].black
+                )
+                  newValues[i + 2][index + 2].canBeatHere = true;
+              }
             }
-          } else if (index === 7) {
-            if (!newValues[i + 1][index - 1].isCovered)
-              newValues[i + 1][index - 1].canMoveHere = true;
-            else {
-              if (
-                !newValues[i + 2][index - 2].isCovered &&
-                newValues[i + 1][index - 1].black
-              )
-                newValues[i + 2][index - 2].canBeatHere = true;
-            }
-          } else {
-            if (!newValues[i + 1][index - 1].isCovered)
-              newValues[i + 1][index - 1].canMoveHere = true;
-            else {
-              if (
-                index - 1 !== 0 &&
-                index - 1 !== 7 &&
-                !newValues[i + 2][index - 2].isCovered &&
-                newValues[i + 1][index - 1].black
-              )
-                newValues[i + 2][index - 2].canBeatHere = true;
-            }
-            if (!newValues[i + 1][index + 1].isCovered)
-              newValues[i + 1][index + 1].canMoveHere = true;
-            else {
-              if (
-                index + 1 !== 0 &&
-                index + 1 !== 7 &&
-                !newValues[i + 2][index + 2].isCovered &&
-                newValues[i + 1][index + 1].black
-              )
-                newValues[i + 2][index + 2].canBeatHere = true;
+          } else if (i === 6) {
+            if (index === 0) {
+              if (!newValues[i + 1][index + 1].isCovered)
+                newValues[i + 1][index + 1].canMoveHere = true;
+            } else if (index === 7) {
+              if (!newValues[i + 1][index - 1].isCovered)
+                newValues[i + 1][index - 1].canMoveHere = true;
+            } else {
+              if (!newValues[i + 1][index - 1].isCovered)
+                newValues[i + 1][index - 1].canMoveHere = true;
+
+              if (!newValues[i + 1][index + 1].isCovered)
+                newValues[i + 1][index + 1].canMoveHere = true;
             }
           }
         } else if (!isBlackNext && v.black && v.isCovered) {
+          //   For Black Next Turn Only
           console.log(isBlackNext);
-          if (index === 0) {
-            if (!newValues[i - 1][index + 1].isCovered)
-              newValues[i - 1][index + 1].canMoveHere = true;
-            else {
-              if (
-                !newValues[i - 2][index + 2].isCovered &&
-                !newValues[i - 1][index + 1].black
-              )
-                newValues[i - 2][index + 2].canBeatHere = true;
+          if (i > 1) {
+            if (index === 0) {
+              if (!newValues[i - 1][index + 1].isCovered)
+                newValues[i - 1][index + 1].canMoveHere = true;
+              else {
+                if (
+                  !newValues[i - 2][index + 2].isCovered &&
+                  !newValues[i - 1][index + 1].black
+                )
+                  newValues[i - 2][index + 2].canBeatHere = true;
+              }
+            } else if (index === 7) {
+              if (!newValues[i - 1][index - 1].isCovered)
+                newValues[i - 1][index - 1].canMoveHere = true;
+              else {
+                if (
+                  !newValues[i - 2][index - 2].isCovered &&
+                  !newValues[i - 1][index - 1].black
+                )
+                  newValues[i - 2][index - 2].canBeatHere = true;
+              }
+            } else {
+              if (!newValues[i - 1][index - 1].isCovered)
+                newValues[i - 1][index - 1].canMoveHere = true;
+              else {
+                if (
+                  index - 1 !== 0 &&
+                  index - 1 !== 7 &&
+                  !newValues[i - 2][index - 2].isCovered &&
+                  !newValues[i - 1][index - 1].black
+                )
+                  newValues[i - 2][index - 2].canBeatHere = true;
+              }
+              if (!newValues[i - 1][index + 1].isCovered)
+                newValues[i - 1][index + 1].canMoveHere = true;
+              else {
+                if (
+                  index + 1 !== 0 &&
+                  index + 1 !== 7 &&
+                  !newValues[i - 2][index + 2].isCovered &&
+                  !newValues[i - 1][index + 1].black
+                )
+                  newValues[i - 2][index + 2].canBeatHere = true;
+              }
             }
-          } else if (index === 7) {
-            if (!newValues[i - 1][index - 1].isCovered)
-              newValues[i - 1][index - 1].canMoveHere = true;
-            else {
-              if (
-                !newValues[i - 2][index - 2].isCovered &&
-                !newValues[i - 1][index - 1].black
-              )
-                newValues[i - 2][index - 2].canBeatHere = true;
+          } else if (i === 1) {
+            if (index === 0) {
+              if (!newValues[i - 1][index + 1].isCovered)
+                newValues[i - 1][index + 1].canMoveHere = true;
+            } else if (index === 7) {
+              if (!newValues[i - 1][index - 1].isCovered)
+                newValues[i - 1][index - 1].canMoveHere = true;
+            } else {
+              if (!newValues[i - 1][index - 1].isCovered)
+                newValues[i - 1][index - 1].canMoveHere = true;
+
+              if (!newValues[i - 1][index + 1].isCovered)
+                newValues[i - 1][index + 1].canMoveHere = true;
             }
           } else {
-            if (!newValues[i - 1][index - 1].isCovered)
-              newValues[i - 1][index - 1].canMoveHere = true;
-            else {
-              if (
-                index - 1 !== 0 &&
-                index - 1 !== 7 &&
-                !newValues[i - 2][index - 2].isCovered &&
-                !newValues[i - 1][index - 1].black
-              )
-                newValues[i - 2][index - 2].canBeatHere = true;
-            }
-            if (!newValues[i - 1][index + 1].isCovered)
-              newValues[i - 1][index + 1].canMoveHere = true;
-            else {
-              if (
-                index + 1 !== 0 &&
-                index + 1 !== 7 &&
-                !newValues[i - 2][index + 2].isCovered &&
-                !newValues[i - 1][index + 1].black
-              )
-                newValues[i - 2][index + 2].canBeatHere = true;
-            }
           }
         }
       })
@@ -255,50 +289,67 @@ function Game() {
           };
         })
       );
-      if (index === 0) {
-        if (!newValues[i + 1][index + 1].isCovered)
-          newValues[i + 1][index + 1].canMoveHere = true;
-        else {
-          if (
-            !newValues[i + 2][index + 2].isCovered &&
-            newValues[i + 1][index + 1].black
-          )
-            newValues[i + 2][index + 2].canBeatHere = true;
+      if (i < 6) {
+        if (index === 0) {
+          if (!newValues[i + 1][index + 1].isCovered)
+            newValues[i + 1][index + 1].canMoveHere = true;
+          else {
+            if (
+              !newValues[i + 2][index + 2].isCovered &&
+              newValues[i + 1][index + 1].black
+            )
+              newValues[i + 2][index + 2].canBeatHere = true;
+          }
+        } else if (index === 7) {
+          if (!newValues[i + 1][index - 1].isCovered)
+            newValues[i + 1][index - 1].canMoveHere = true;
+          else {
+            if (
+              !newValues[i + 2][index - 2].isCovered &&
+              newValues[i + 1][index - 1].black
+            )
+              newValues[i + 2][index - 2].canBeatHere = true;
+          }
+        } else {
+          if (!newValues[i + 1][index - 1].isCovered)
+            newValues[i + 1][index - 1].canMoveHere = true;
+          else {
+            if (
+              index - 1 !== 0 &&
+              index - 1 !== 7 &&
+              !newValues[i + 2][index - 2].isCovered &&
+              newValues[i + 1][index - 1].black
+            )
+              newValues[i + 2][index - 2].canBeatHere = true;
+          }
+          if (!newValues[i + 1][index + 1].isCovered)
+            newValues[i + 1][index + 1].canMoveHere = true;
+          else {
+            if (
+              index + 1 !== 0 &&
+              index + 1 !== 7 &&
+              !newValues[i + 2][index + 2].isCovered &&
+              newValues[i + 1][index + 1].black
+            )
+              newValues[i + 2][index + 2].canBeatHere = true;
+          }
         }
-      } else if (index === 7) {
-        if (!newValues[i + 1][index - 1].isCovered)
-          newValues[i + 1][index - 1].canMoveHere = true;
-        else {
-          if (
-            !newValues[i + 2][index - 2].isCovered &&
-            newValues[i + 1][index - 1].black
-          )
-            newValues[i + 2][index - 2].canBeatHere = true;
-        }
-      } else {
-        if (!newValues[i + 1][index - 1].isCovered)
-          newValues[i + 1][index - 1].canMoveHere = true;
-        else {
-          if (
-            index - 1 !== 0 &&
-            index - 1 !== 7 &&
-            !newValues[i + 2][index - 2].isCovered &&
-            newValues[i + 1][index - 1].black
-          )
-            newValues[i + 2][index - 2].canBeatHere = true;
-        }
-        if (!newValues[i + 1][index + 1].isCovered)
-          newValues[i + 1][index + 1].canMoveHere = true;
-        else {
-          if (
-            index + 1 !== 0 &&
-            index + 1 !== 7 &&
-            !newValues[i + 2][index + 2].isCovered &&
-            newValues[i + 1][index + 1].black
-          )
-            newValues[i + 2][index + 2].canBeatHere = true;
+      } else if (i === 6) {
+        if (index === 0) {
+          if (!newValues[i + 1][index + 1].isCovered)
+            newValues[i + 1][index + 1].canMoveHere = true;
+        } else if (index === 7) {
+          if (!newValues[i + 1][index - 1].isCovered)
+            newValues[i + 1][index - 1].canMoveHere = true;
+        } else {
+          if (!newValues[i + 1][index - 1].isCovered)
+            newValues[i + 1][index - 1].canMoveHere = true;
+
+          if (!newValues[i + 1][index + 1].isCovered)
+            newValues[i + 1][index + 1].canMoveHere = true;
         }
       }
+
       newValues[i][index].isPieceClicked = true;
       setValues(newValues);
     }
