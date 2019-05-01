@@ -116,6 +116,8 @@ function Game() {
             newValues[i - 1][index - 1].canMoveHere = true;
           else {
             if (
+              index - 1 !== 0 &&
+              index - 1 !== 7 &&
               !newValues[i - 2][index - 2].isCovered &&
               !newValues[i - 1][index - 1].black
             )
@@ -125,6 +127,8 @@ function Game() {
             newValues[i - 1][index + 1].canMoveHere = true;
           else {
             if (
+              index + 1 !== 0 &&
+              index + 1 !== 7 &&
               !newValues[i - 2][index + 2].isCovered &&
               !newValues[i - 1][index + 1].black
             )
@@ -170,6 +174,8 @@ function Game() {
           newValues[i + 1][index - 1].canMoveHere = true;
         else {
           if (
+            index - 1 !== 0 &&
+            index - 1 !== 7 &&
             !newValues[i + 2][index - 2].isCovered &&
             newValues[i + 1][index - 1].black
           )
@@ -179,6 +185,8 @@ function Game() {
           newValues[i + 1][index + 1].canMoveHere = true;
         else {
           if (
+            index + 1 !== 0 &&
+            index + 1 !== 7 &&
             !newValues[i + 2][index + 2].isCovered &&
             newValues[i + 1][index + 1].black
           )
